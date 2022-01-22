@@ -1,7 +1,5 @@
 import React from 'react';
-import Game from './game.js';
-import Book from './book.js';
-import story from './books/ronin_malgre_vous.json';
+import Game from './Game';
 import './App.css';
 
 function App() {
