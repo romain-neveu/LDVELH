@@ -1,0 +1,151 @@
+{
+	"title": "Ronin malgré vous",
+	"paragraphs": [
+		{
+			"number": 1, 
+			"text": [
+				"Dans son testament, votre seigneur vous lègue le service à thé de sa famille : \"Je te lègue mon bien le plus précieux, qui repose dans ma famille depuis des générations, et ne se transmet que de père en fils. Tu as en toi plus de force que tu ne le penses, et ton coeur est noble, le thé est une bonne voie vers la sagesse\".",
+				"Vous en faites le serment : même si cela doit vous déshonnorer aux yeux de tous, et vous faire detester, vous rendrez justice à votre bienfaiteur, votre choix est fait.",
+				"Telle est votre destinée : Ronin malgré vous."
+			],
+			"links": [
+				{
+					"number": 2,
+					"text": "Pour continuer l'aventure"
+				}
+			]
+		},
+		{
+			"number": 2, 
+			"text": [
+				"Tout d'abord, il vous faut chercher des indices, une piste qui pourrait vous permettre de connaître le coupable. La foule s'accumule aux portes du domaines, et bientôt la milice sera sur les lieux, vous empêchant certainement de mener votre enquête.",
+				"Si vous restez sur place, vous vous exposez au conflit, peut-être qu'à l'éxtérieur des témoins on tapercu le coupable. D'un autre côté ce dernier pourrait bien avoir laissé un indice capital sur les lieux du crime.",
+				"Et où est rangé ce service à thé ?"
+			],
+			"links": [
+				{
+					"number": 14,
+					"text": "Pour rester et inspecter le domaine"
+				},
+				{
+					"number": 27,
+					"text": "Pour sortir et éviter la milice"
+				},
+				{
+					"number": 18,
+					"text": "Pour chercher le service à thé"
+				}
+			]
+		},
+
+		{
+			"number": 3, 
+			"text": [
+				"Vous êtes mort. C'est ce qui arrive quand on fait le malin.",
+				"",
+				""
+			],
+			"links": [
+				{
+					"number": 1,
+					"text": "Pour respawn et jouer sans tricher cette fois"
+				}
+			]
+		},
+
+		{
+			"number": 14, 
+			"text": [
+				"Et voilà ! Vous commencez à fouiller les lieux, la milice arrive, vous prend pour le coupable et vous tue.",
+				"Le choix le plus risqué n'est pas toujours celui qui rapporte le plus.",
+				"Vous êtes mort."
+			],
+			"links": [
+				{
+					"number": 1,
+					"text": "Pour respawn"
+				}
+			]
+		},
+
+		{
+			"number": 15, 
+			"text": [
+				"Votre voeux est exaucé, vous êtes désormais un vrai Ronin, sans honneur. Vous vivrez dans la honte et le tourment pour le reste de votre vie.",
+				"Vous n'êtes pas mort, mais ce n'est franchement pas glorieux."
+			],
+			"links": [
+				{
+					"number": 1,
+					"text": "Pour respawn parce que même si vous n'êtes pas mort ce n'est pas glorieux"
+				}
+			]
+		},
+
+		{
+			"number": 18, 
+			"text": [
+				"Vous cherchez le service à thé, mais vous ne le trouvez pas, probablement car la suite de cette histoire n'est pas encore écrite.",
+				"Vous avez l'impression de tourner en rond."
+			],
+			"links": [
+				{
+					"number": 18,
+					"text": "Pour continuer à chercher le service à thé"
+				},
+				{
+					"number": 1,
+					"text": "Pour vous réincarner et espérer une suite dans une vie ultérieure"
+				}
+			]
+		},
+
+
+		{
+			"number": 27, 
+			"text": [
+				"Et voilà ! Vous sortez, vous voyez la milice entrer dans le domaine, puis vous entendez un bref combat. Le coupable était toujours sur les lieux, les miliciens l'ont tué. Vous ne pourrez jamais venger votre maître car vous avez préféré fuir.",
+				"Le choix le moins risqué n'est pas toujours celui qui coûte le moins.",
+				"Noyé dans la honte, seul le seppuku pourra laver le peu d'honneur qu'il vous reste."
+			],
+			"links": [
+				{
+					"number": 44,
+					"text": "Pour faire seppuku"
+				},
+				{
+					"number": 15,
+					"text": "Pour vivre dans la honte"
+				}
+			]
+		},
+
+		{
+			"number": 44, 
+			"text": [
+				"C'est le coeur plein de rage et de tristesse que vous entamez votre ultime rituel, le dernier choix que vous aviez. Votre Wakizashi en main, vous vous transpercez le ventre sur toute la largeur. Aucune douleur physique ne saurait vous arracher le moindre cri, toutes vos larmes sont pour votre maître.",
+				"C'est noble, mais vous êtes quand même mort."
+			],
+			"links": [
+				{
+					"number": 1,
+					"text": "Pour respawn"
+				}
+			]
+		},
+
+		{
+			"number": 51, 
+			"text": [
+				"Votre voeux est exaucé, vous êtes désormais un vrai Ronin, sans honneur. Vous vivrez dans la honte et le tourment pour le reste de votre vie.",
+				"Vous n'êtes pas mort, mais ce n'est franchement pas glorieux."
+			],
+			"links": [
+				{
+					"number": 1,
+					"text": "Pour respawn même si vous n'êtes pas mort parce que quand même ce n'est pas glorieux"
+				}
+			]
+		}
+	]
+}

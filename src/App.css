@@ -37,25 +37,50 @@
   }
 }
 
+@font-face {
+  font-family: Augusta;
+  src: url(./fonts/augusta/Augusta.ttf);
+}
+
 
 body {
   width: 70%;
   margin-left: 25%;
-  background-color: #EEEEEE;
+  background-color: #777;
   font-family: sans-serif;
+  color: #280300;
 }
 
-a { 
+.Book {
+    font-family: Augusta;
+    background: url(./img/burned-fibred-paper-1184519.png );
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 800px;
+    height: 1150px;
+    box-sizing: border-box;
+    padding: 5em;
+}
+
+.Book a { 
   display: block; 
   margin: 1rem; 
   text-decoration: none;
-  color: #947508;  
 }
-a:hover { 
-  color: #665107; 
+.Book a:hover { 
 }
 
 .BookEditor textarea {
     width: 50%; 
     height: 120px;
+}
+
+header nav li {
+  list-style: none;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0.5em;
+  padding: 1em;
+  background-color: white;
+  color: #282c34;
 }
