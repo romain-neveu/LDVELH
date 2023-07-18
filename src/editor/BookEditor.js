@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { find_path_to_death, find_ancestors, existing_numbers } from '../utils/book_utils'
+import { find_path_to_death, find_ancestors, existing_numbers, number_exists, first_number_available } from '../utils/book_utils'
 import { useForm } from 'react-hook-form';
-import FormParagraph from './FormParagraph';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenNib, faXmark } from '@fortawesome/free-solid-svg-icons'
 
-const BookEditor = ({story}) => {
+
+const BookEditor = ({initialStory}) => {
+
+	const [ story, setStory ] = useState(initialStory);
+
+
 
 	return (
 		<div className="BookEditor">
@@ -14,7 +20,7 @@ const BookEditor = ({story}) => {
 
 			<Paragraphs story={story} />
 
-			<CreateForm story={story} />
+			<ParagraphCreate story={story} setStory={setStory} />
 			
 			<BookJson story={story} />
 
@@ -22,41 +28,189 @@ const BookEditor = ({story}) => {
 	)
 }
 
-const Paragraphs = ({story}) => <ul id="paragraphs">{story.paragraphs.map((paragraph) => 
-	<Paragraph paragraph={paragraph} story={story} />
-)}</ul>
+const BookLength = ({story}) => {
+	const death_length = find_path_to_death(story, story.paragraphs[0]);
+	return <i>Fin: entre {death_length.shortest} et {death_length.longest} choix</i>
+}
+
+const Paragraphs = ({story}) => <ul id="paragraphs">
+	{story.paragraphs.map((paragraph) => 
+		<li><Paragraph paragraph={paragraph} story={story} /></li>
+	)}</ul>
 
 const Paragraph = ({paragraph, story}) => {
 	const [mode, setMode] = useState("display");
-
-	const actions = () => (mode === "edit") ?
-		<button onClick={()=>{setMode("display")}}>Cancel</button>
-		: 
-		<button onClick={()=>{setMode("edit")}}>Edit</button>
 	
 	return (
-		<section id={"paragraph-" + paragraph.number}>
-			{actions()}
-			{(mode === "edit") ? 
-			<FormParagraph story={story} paragraph={paragraph} /> 
-			: 
-			<ParagraphDisplay story={story} paragraph={paragraph} />}
-		</section>
+		<>
+			<section id={"paragraph-" + paragraph.number}>
+				{(mode === "edit") ? 
+					<>
+						<ParagraphEdit story={story} paragraph={paragraph} setMode={setMode} />
+						<a onClick={()=>{setMode("display")}}>
+							<FontAwesomeIcon icon={faXmark} />
+							Cancel
+						</a>
+					</>
+					: 
+					<>
+						<ParagraphDisplay story={story} paragraph={paragraph} />
+						<a onClick={()=>{setMode("edit")}}>
+							<FontAwesomeIcon icon={faPenNib} />
+							Edit
+						</a>
+						
+					</>
+				}
+			</section>
+			<hr />
+		</>
 	)
 }
 
 const ParagraphDisplay = ({paragraph, story}) => <>
 		<h3>Paragraphe {paragraph.number}</h3>
-		<div>{paragraph.text.map((line, index) => 
-			<p key={index}>{line}</p>
-		)}</div>
-		<nav>{paragraph.links.map((link) => 
-			<a href={"#paragraph-" + link.number}>{link.text}, rendez-vous au paragraphe {link.number}</a>
-		)}</nav>
-		<nav>Liens depuis paragraphes {find_ancestors(story, paragraph.number).map((parag, index) => 
-			<a key={index} href={"#paragraph-" + parag.number}>#{parag.number}</a> 
-		)}</nav>
+		<p>{paragraph.text.split("\n").map(line => <>{line}<br/></>)}</p>
+		<nav><ul>{paragraph.links.map((link) => 
+			<li><a href={"#paragraph-" + link.number}>{link.text}, rendez-vous au paragraphe {link.number}</a></li>
+		)}</ul></nav>
+		<nav><ul>Liens depuis paragraphes {find_ancestors(story, paragraph.number).map((parag, index) => 
+			<li><a key={index} href={"#paragraph-" + parag.number}>#{parag.number}</a></li>
+		)}</ul></nav>
 	</>
+
+
+const ParagraphEdit = ({paragraph, story, setMode}) => {
+
+	const [number, setNumber] = useState(paragraph.number);
+	const [text, setText] = useState(paragraph.text);
+
+	function handleSubmit(e) {
+		// Prevent the browser from reloading the page
+		e.preventDefault();
+	
+		// Read the form data
+		const form = e.target;
+		const formData = new FormData(form);
+		
+		// Or you can work with it as a plain object:
+		const formJson = Object.fromEntries(formData.entries());
+		console.log(formJson);
+	}
+
+	return (
+		<form onSubmit={handleSubmit}>
+			<h3>
+				Paragraphe
+				<input type="number" name="number" value={number} onChange={(e)=>setNumber(e.value)} />
+			</h3>
+			<div>
+				<textarea name="text" onChange={(e)=>setText(e.value)}>{text}</textarea>
+			</div>
+			<input type="submit" value="OK" />
+			<button onClick={e => setMode("display")}>Cancel</button>
+		</form>	
+	)
+}
+
+const LinkEdit = ({link}) => {
+	const [number, setNumber] = useState(link.number);
+	const [text, setText] = useState(link.text);
+
+	return (<>
+		<input type="text" name="text" value={text} onChange={(e)=>setText(e.value)} />
+		, rendez-vous au paragraphe <input type="number" name="number" value={number} onChange={(e)=>setNumber(e.value)} />
+	</>)
+}
+
+
+const ParagraphCreate = ({story, setStory}) => {
+	const [number, setNumber] = useState(first_number_available(story));
+	const [numberError, setNumberError] = useState("");
+	const [text, setText] = useState("");
+	const [textError, setTextError] = useState("");
+	const [links, setLinks] = useState([]);
+
+	const addParagraph = (paragraph) => {
+		setStory(previousStory => { return {...previousStory, paragraphs: [...previousStory.paragraphs, paragraph]}});
+	}
+
+	const validateNumber = (number) => {
+		if (number < 1) {
+			setNumberError("Le numéro de paragraphe doit être supérieur à 0")
+			return false;
+		}
+		if (number_exists(story, number)) {
+			setNumberError("Le numéro de paragraphe existe déjà")
+			return false;
+		}
+		setNumberError("")
+		return true;
+	}
+
+	const validateText = (text) => {
+		if (!text) {
+			setTextError("Le texte ne peut pas être vide")
+			return false;
+		}
+		setTextError("")
+		return true;
+	}
+
+	const createParagraph = (e) => {
+		e.preventDefault()
+		if (!validateNumber(number) || !validateText(text)) {
+			return
+		}
+		const paragraph = {
+			number: number,
+			text: text, 
+			links: links
+		};
+		addParagraph(paragraph);
+	}
+
+	const addLinkInput = () => {
+		setLinks([...links, { text: "", number: 0 }]);
+	}
+
+	const setLinkText = (index, text) => {
+		setLinks(links => links.map((link, i)=> i===index ? {...link, text: text}:link))
+	}
+	const setLinkNumber = (index, number) => {
+		setLinks(links => links.map((link, i)=> i===index ? {...link, number: number}:link))
+	}
+	return (
+		<form onSubmit={createParagraph}>
+			<fieldset>
+				<input placeholer="numéro" type="number" name="number" min="1" value={number} onChange={(e)=>{setNumber(parseInt(e.target.value)); validateNumber(parseInt(e.target.value));}} />
+				{numberError && <span className="error">{numberError}</span>}
+			</fieldset>
+			<fieldset>
+				<textarea placeholder="Texte" name="text" onChange={(e)=>{setText(e.target.value); validateText(e.target.value)}}>{text}</textarea>
+				{textError && <span className="error">{textError}</span>}
+			</fieldset>
+			{links.map((link, index) => <fieldset>
+				<input type="text" name={"links["+index+"][text]"} value={link.text} onChange={(e) => setLinkText(index, e.target.value)} />
+				, rendez-vous au paragraphe
+				<input type="number" name={"links["+index+"][number]"} value={link.number} onChange={(e) => setLinkNumber(index, e.target.value)} />
+			</fieldset>)}
+			<button onClick={addLinkInput}>Ajouter un lien vers un paragraphe</button>
+			<input type="submit" value="OK" disabled={numberError || textError}/>
+		</form>	
+	)
+}
+
+const BookJson = ({story}) => <pre>{JSON.stringify(story, null, 2)}</pre>
+
+
+
+
+
+
+
+
+
 
 
 const CreateForm = ({story}) => {
@@ -120,11 +274,6 @@ const createParagraph = (data) => {
 
 }
 
-const BookLength = ({story}) => {
-	const death_length = find_path_to_death(story, story.paragraphs[0]);
-	return <i>Fin: entre {death_length.shortest} et {death_length.longest} choix</i>
-}
 
-const BookJson = ({story}) => <pre>{JSON.stringify(story, null, 2)}</pre>
 
 export default BookEditor;

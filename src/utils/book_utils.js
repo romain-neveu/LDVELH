@@ -42,5 +42,15 @@ const find_ancestors = (story, paragraphNumber) =>
 
 const existing_numbers = (story) =>  story.paragraphs.map((paragraph) => paragraph.number).sort()
 
+const number_exists = (story, number) =>  existing_numbers(story).includes(number);
 
-export { find_paragraph, find_path_to_death, find_ancestors, existing_numbers };
+const first_number_available = (story) =>  {
+	let number = 1;
+	while (existing_numbers(story).includes(number)) {
+		number++;
+	}
+	return number;
+}
+
+
+export { find_paragraph, find_path_to_death, find_ancestors, existing_numbers, number_exists, first_number_available };

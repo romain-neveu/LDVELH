@@ -4,23 +4,28 @@ import Book from './player/Book';
 import BookEditor from './editor/BookEditor';
 import story from './books/ronin_malgre_vous.json';
 import './App.css';
+import BookIntroduction from './player/BookIntroduction';
 
 function App() {
   return (
-    <div className="App">  
+    <div className="App">
     <Router>
       <header>
-        <nav>
+        <h1>{story.title} - Le livre dont vous êtes le héros</h1>
+      </header>
+      <Routes>
+        <Route path="/" exact element={<BookIntroduction story={story} />} />
+        <Route path="/paragraph/:number?" element={<Book story={story} />} />
+        <Route path="/edit" exact element={<BookEditor initialStory={story}/>} />
+      </Routes>
+      <footer>
+      <nav>
           <ul>
-          <li><Link to="/play">Commencer</Link></li>
+          <li><Link to="/paragraph/1">Commencer à jouer</Link></li>
           <li><Link to="/edit">Editer</Link></li>
           </ul>
         </nav>
-      </header>
-      <Routes>
-      <Route path="/play/:paragraphNumber?" element={<Book story={story} />} />
-      <Route path="/edit" exact element={<BookEditor story={story}/>} />
-      </Routes>
+      </footer>
     </Router>
     </div>
   );
