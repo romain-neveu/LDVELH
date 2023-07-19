@@ -125,14 +125,16 @@ const LinkEdit = ({link}) => {
 
 
 const ParagraphCreate = ({story, setStory}) => {
+
 	const [number, setNumber] = useState(first_number_available(story));
 	const [numberError, setNumberError] = useState("");
 	const [text, setText] = useState("");
 	const [textError, setTextError] = useState("");
-	const [links, setLinks] = useState([]);
+	const [links, setLinks] = useState([{ text: "", number: 0 }]);
+	const [linkErrors, setLinkErrors] = useState([""]);
 
 	const addParagraph = (paragraph) => {
-		setStory(previousStory => { return {...previousStory, paragraphs: [...previousStory.paragraphs, paragraph]}});
+		setStory(previousStory => { return {...previousStory, paragraphs: [...previousStory.paragraphs, paragraph].sort((paragA, paragB) => paragA.number-paragB.number)}});
 	}
 
 	const validateNumber = (number) => {
@@ -157,15 +159,40 @@ const ParagraphCreate = ({story, setStory}) => {
 		return true;
 	}
 
+	const validateLinks = (links) => {
+		return links.map((link, index) => validateLink(index, link.number, link.text)).every((result)=>result);
+	}
+
+	const validateLinkText = (index, text) => {
+		return validateLink(index, text, links[index].number);
+	}
+
+	const validateLinkNumber = (index, number) => {
+		return validateLink(index, links[index].text, number);
+	}
+
+	const validateLink = (index, number, text) => {
+		if (text && !number) {
+			setLinkErrors(errors => errors.map((error, i) => i === index ? "Le numéro de paragraphe ne peut pas être vide" : error))
+			return false;
+		}
+		if (number && !text) {
+			setLinkErrors(errors => errors.map((error, i) => i === index ? "Le texte ne peut pas être vide" : error))
+			return false;
+		}
+		setLinkErrors(errors => errors.map((error, i) => i === index ? "" : error))
+		return true;
+	}
+
 	const createParagraph = (e) => {
 		e.preventDefault()
-		if (!validateNumber(number) || !validateText(text)) {
+		if (!validateNumber(number) || !validateText(text) || !validateLinks(links)) {
 			return
 		}
 		const paragraph = {
 			number: number,
 			text: text, 
-			links: links
+			links: links.filter(link => link.text && link.number)
 		};
 		addParagraph(paragraph);
 	}
@@ -175,11 +202,19 @@ const ParagraphCreate = ({story, setStory}) => {
 	}
 
 	const setLinkText = (index, text) => {
-		setLinks(links => links.map((link, i)=> i===index ? {...link, text: text}:link))
+		setLinks(links => links
+			.map((link, i)=> i===index ? {...link, text: text}:link)
+			.concat(links.some(link => !link.number && !link.text) ? [] : [{text: "", number: 0}]))
 	}
+
 	const setLinkNumber = (index, number) => {
 		setLinks(links => links.map((link, i)=> i===index ? {...link, number: number}:link))
 	}
+
+	const deleteLink = (index) => {
+		setLinks(links => links.toSpliced(index, 1))
+	}
+	
 	return (
 		<form onSubmit={createParagraph}>
 			<fieldset>
@@ -190,10 +225,27 @@ const ParagraphCreate = ({story, setStory}) => {
 				<textarea placeholder="Texte" name="text" onChange={(e)=>{setText(e.target.value); validateText(e.target.value)}}>{text}</textarea>
 				{textError && <span className="error">{textError}</span>}
 			</fieldset>
-			{links.map((link, index) => <fieldset>
-				<input type="text" name={"links["+index+"][text]"} value={link.text} onChange={(e) => setLinkText(index, e.target.value)} />
+			{links.map((link, index) => <fieldset
+				draggable="true" 
+				onDragStart={e=>{e.dataTransfer.setData("originalIndex", index)}} 
+				onDrop={(e)=>{let originalIndex = parseInt(e.dataTransfer.getData("originalIndex")); let originalLink=links[originalIndex]; setLinks(links=>
+					originalIndex <= index 
+						? links.map((lk, i) => i==index 
+							? {...originalLink}
+							: (i >= originalIndex && i < index ? {...links[i+1] } : lk)
+							)
+						: links.reverse().map((lk, i) => i==index 
+							? {...originalLink}
+							: (i > index && i <= originalIndex ? {...links[i-1] } : lk)
+						)
+					)}} 
+				onDragOver={e=>{e.preventDefault()}}
+					>
+				<input type="text" name={"links["+index+"][text]"} value={link.text} onChange={(e) => { validateLinkText(index, e.target.value); setLinkText(index, e.target.value)}} />
 				, rendez-vous au paragraphe
-				<input type="number" name={"links["+index+"][number]"} value={link.number} onChange={(e) => setLinkNumber(index, e.target.value)} />
+				<input type="number" name={"links["+index+"][number]"} value={link.number} onChange={(e) => { validateLinkNumber(index, parseInt(e.target.value)); setLinkNumber(index, parseInt(e.target.value)) }} />
+				<button onClick={e=>deleteLink(index)}>Enlever le lien</button>
+				{linkErrors[index] && <span className="error">{linkErrors[index]}</span>}
 			</fieldset>)}
 			<button onClick={addLinkInput}>Ajouter un lien vers un paragraphe</button>
 			<input type="submit" value="OK" disabled={numberError || textError}/>
@@ -201,7 +253,14 @@ const ParagraphCreate = ({story, setStory}) => {
 	)
 }
 
-const BookJson = ({story}) => <pre>{JSON.stringify(story, null, 2)}</pre>
+const BookJson = ({story}) => {
+	const copyToClipboard = (text) => navigator.clipboard.writeText(text);
+	const book = JSON.stringify(story, null, 2);
+	return (<>
+		<pre>{book}</pre>
+		<button onClick={e => copyToClipboard(book)}>Copier le livre</button>
+	</>)
+}
 
 
 
