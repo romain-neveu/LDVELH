@@ -9,7 +9,7 @@ const find_paragraph = (story, paragraphNumber) => {
 
 const find_path_to_death = (story, paragraph) => {
 	let path_to_death = {shortest: 0, longest: 0};
-	if(!is_death(paragraph)) {
+	if(paragraph && !is_death(paragraph)) {
 		let links_paths_to_death = [];
 		paragraph.links.forEach(link => {
 			links_paths_to_death.push(find_path_to_death(story, find_paragraph(story, link.number)));				
