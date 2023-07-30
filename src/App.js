@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Book from './player/Book';
 import BookEditor from './editor/BookEditor';
 import story from './books/ronin_malgre_vous.json';
