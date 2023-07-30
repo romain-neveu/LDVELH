@@ -20,12 +20,20 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm install surge
-    - run: npm run deploy
+
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
+      
+      - name: Deploy to ldvlh.surge.sh
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: 'ldvlh.surge.sh'
+          project: './build'
+          login: ${{ secrets.surge_login }}
+          token: ${{ secrets.surge_token }}
