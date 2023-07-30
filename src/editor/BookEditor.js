@@ -145,7 +145,8 @@ const BookJson = ({story}) => {
 	const book = JSON.stringify(story, null, 2);
 	return (<>
 		<pre>{book}</pre>
-		<button onClick={e => copyToClipboard(book)}>Copier le livre</button>
+		<button onClick={() => copyToClipboard(book)}>Copier le livre</button>
+		<button onClick={() => window.open(window.URL.createObjectURL(new Blob([book])))}>Télécharger</button>
 	</>)
 }
 
