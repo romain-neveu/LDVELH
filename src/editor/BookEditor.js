@@ -18,16 +18,41 @@ const BookEditor = ({initialStory}) => {
 
 			<Introduction story={story} setStory={setStory} />
 
-			<BookLength story={story} />
-
 			<Paragraphs story={story} setStory={setStory} />
 
 			<ParagraphEdit story={story} setStory={setStory} />
 			
+			<hr />
+
 			<BookJson story={story} />
+
+			<hr />
+
+			<BookLength story={story} />
+
+			<hr />
+
+			<LocalSave story={story} setStory={setStory} />
 
 		</div>
 	)
+}
+
+const LocalSave = ({story, setStory}) => {
+
+	const save = () => {
+		localStorage.setItem("ldvlh_story", btoa(JSON.stringify(story)))
+	}
+
+	const load = () => {
+		const loaded_story = JSON.parse(atob(localStorage.getItem("ldvlh_story")))
+		setStory(loaded_story)		
+	}
+
+	return (<>
+		<button onClick={()=>save()}>Sauvegarder en local</button>
+		<button onClick={()=>load()}>Charger depuis sauvegarde locale</button>
+	</>)
 }
 
 const Title = ({story, setStory}) => {
