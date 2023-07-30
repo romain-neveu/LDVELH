@@ -14,7 +14,9 @@ const BookEditor = ({initialStory}) => {
 	return (
 		<div className="BookEditor">
 			
-			<h1>Editeur de livre - Le livre dont vous êtes l'auteur</h1>
+			<Title story={story} setStory={setStory} />
+
+			<Introduction story={story} setStory={setStory} />
 
 			<BookLength story={story} />
 
@@ -27,6 +29,64 @@ const BookEditor = ({initialStory}) => {
 		</div>
 	)
 }
+
+const Title = ({story, setStory}) => {
+	const [mode, setMode] = useState("display");
+	const [title, setTitle] = useState(story.title);
+
+	const changeTitle = () => {
+		setStory(previousStory => ({...previousStory, title: title}))
+		setMode("display")
+	}
+
+	return (<>
+		{(mode === "edit") ? 
+			<form onSubmit={(e) => {e.preventDefault(); changeTitle()}}>
+				<input type="text" placeholder="Titre" name="title" value={title} onChange={e=>setTitle(e.target.value)} />
+				<input type="submit" value="OK" />
+				<button onClick={e=>setMode("display")}>Annuler</button>
+			</form>
+			:
+			<>
+				<h2>{story.title}</h2>
+				<button onClick={e=> {setTitle(story.title); setMode("edit")}}>
+					<FontAwesomeIcon icon={faPenNib} />
+					Modifier
+				</button>
+			</>
+		}
+	</>)
+}
+
+
+const Introduction = ({story, setStory}) => {
+	const [mode, setMode] = useState("display");
+	const [introduction, setIntroduction] = useState(story.introduction);
+
+	const changeIntroduction = () => {
+		setStory(previousStory => ({...previousStory, introduction: introduction}))
+		setMode("display")
+	}
+
+	return (<>
+		{(mode === "edit") ? 
+			<form onSubmit={(e) => {e.preventDefault(); changeIntroduction()}}>
+				<textarea placeholder="Introduction" name="introduction" value={introduction} onChange={e=>setIntroduction(e.target.value)}></textarea>
+				<input type="submit" value="OK" />
+				<button onClick={e=>{setIntroduction(story.introduction); setMode("display")}}>Annuler</button>
+			</form>
+			:
+			<>
+				<div><em>{story.introduction}</em></div>
+				<button onClick={e=>setMode("edit")}>
+					<FontAwesomeIcon icon={faPenNib} />
+					Modifier
+				</button>
+			</>
+		}
+	</>)
+}
+
 
 const BookLength = ({story}) => {
 	const death_length = find_path_to_death(story, story.paragraphs[0]);
@@ -49,7 +109,7 @@ const Paragraph = ({paragraph, story, setStory}) => {
 						<ParagraphEdit story={story} originalParagraph={paragraph} setStory={setStory} setMode={setMode} />
 						<button onClick={()=>{setMode("display")}}>
 							<FontAwesomeIcon icon={faXmark} />
-							Cancel
+							Annuler
 						</button>
 					</>
 					: 
@@ -57,7 +117,7 @@ const Paragraph = ({paragraph, story, setStory}) => {
 						<ParagraphDisplay story={story} paragraph={paragraph} />
 						<button onClick={()=>{setMode("edit")}}>
 							<FontAwesomeIcon icon={faPenNib} />
-							Edit
+							Modifier
 						</button>
 						
 					</>

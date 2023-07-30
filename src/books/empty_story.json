@@ -1,0 +1,13 @@
+{
+	"title": "Le titre",
+	"introduction": "L'intro",
+	"paragraphs": [        
+        {
+            "number": 1,
+            "text": "Premier paragrpahe",
+            "links": [
+            ]
+        }
+    ]
+}
+    
