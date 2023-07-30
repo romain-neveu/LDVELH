@@ -4,7 +4,9 @@ import { Link, useParams } from 'react-router-dom';
 
 const Book = ({story}) => {
 
-	const { number } = useParams();
+	const params = useParams()
+	params.number = parseInt(params.number)
+	const { number } = params
 	
 	let paragraph = find_paragraph(story, number)
 

@@ -86,8 +86,6 @@ const ParagraphEdit = ({story, setStory, originalParagraph, setMode}) => {
 	)
 }
 
-const empty_link = () => ({ text: "", number: 0 })
-
 const is_active_link = (link) => (link.text || link.number)
 
 const get_number_error = (number, story, originalParagraph) => {

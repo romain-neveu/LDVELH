@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { find_path_to_death, find_ancestors, existing_numbers, number_exists, first_number_available } from '../utils/book_utils'
-import { useForm } from 'react-hook-form';
+import { find_path_to_death, find_ancestors } from '../utils/book_utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenNib, faXmark } from '@fortawesome/free-solid-svg-icons'
 import ParagraphEdit from './ParagraphEdit';
@@ -48,18 +47,18 @@ const Paragraph = ({paragraph, story, setStory}) => {
 				{(mode === "edit") ? 
 					<>
 						<ParagraphEdit story={story} originalParagraph={paragraph} setStory={setStory} setMode={setMode} />
-						<a onClick={()=>{setMode("display")}}>
+						<button onClick={()=>{setMode("display")}}>
 							<FontAwesomeIcon icon={faXmark} />
 							Cancel
-						</a>
+						</button>
 					</>
 					: 
 					<>
 						<ParagraphDisplay story={story} paragraph={paragraph} />
-						<a onClick={()=>{setMode("edit")}}>
+						<button onClick={()=>{setMode("edit")}}>
 							<FontAwesomeIcon icon={faPenNib} />
 							Edit
-						</a>
+						</button>
 						
 					</>
 				}

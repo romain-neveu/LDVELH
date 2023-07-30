@@ -1,12 +1,7 @@
 import React from 'react';
-import { find_paragraph } from '../utils/book_utils'
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const BookIntroduction = ({story}) => {
-
-	const { number } = useParams();
-	
-	let paragraph = find_paragraph(story, number)
 
 	return (
 		<div className="Book introduction">

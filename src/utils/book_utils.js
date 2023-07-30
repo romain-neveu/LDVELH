@@ -2,7 +2,7 @@
 const find_paragraph = (story, paragraphNumber) => {
 	let paragraph = story.paragraphs[0];
 	if (paragraphNumber) {
-		paragraph = story.paragraphs.find(parag => parag.number == paragraphNumber);
+		paragraph = story.paragraphs.find(parag => parag.number === paragraphNumber)
 	}
 	return paragraph;
 }
