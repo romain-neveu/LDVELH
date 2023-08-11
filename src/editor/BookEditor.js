@@ -41,11 +41,11 @@ const BookEditor = ({initialStory}) => {
 const LocalSave = ({story, setStory}) => {
 
 	const save = () => {
-		localStorage.setItem("ldvlh_story", btoa(JSON.stringify(story)))
+		localStorage.setItem("ldvelh_story", btoa(JSON.stringify(story)))
 	}
 
 	const load = () => {
-		const loaded_story = JSON.parse(atob(localStorage.getItem("ldvlh_story")))
+		const loaded_story = JSON.parse(atob(localStorage.getItem("ldvelh_story")))
 		setStory(loaded_story)		
 	}
 
